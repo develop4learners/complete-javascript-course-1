@@ -83,13 +83,78 @@ var mark = {
   height:5.5,
   calcBMI: function(){
     this.bmi = this.mass / (this.height*this.height);
+    //return this.bmi
   }
 };
-john.calcBMI();
-mark.calcBMI();
+john.calcBMI(); //I can also have this method return this.bmi, so when calling john.calcBMI() it's no longer void.
+mark.calcBMI(); //However, return IS NOT REQUIRED in order for this.bmi to become attribute
 console.log(john.name+'\'s BMI: '+john.bmi)
 console.log(mark.name+'\'s BMI: '+mark.bmi)
-//Note: First, I wish I could define "Person" class so I didn't have
-//to redefine calcBMI as it's own method for both john & mark Objects
-//Second, it seems like bmi should already be calculated without
-//me needing to do the method outside the object. Maybe BMI is a weird example. Like it doesn't feel like it should take an extra step to calculate it. idk
+//    only if you return in method:
+//console.log("John's is: "+john.calcBMI()+"Mark's is "+mark.calcBMI());
+//    Note: First, I wish I could define "Person" class so I didn't have
+//    to redefine calcBMI as it's own method for both john & mark Objects
+//    Second, it seems like bmi should already be calculated without
+//    me needing to do the method outside the object. Maybe BMI is a weird example. Like it doesn't feel like it should take an extra step to calculate it. idk
+
+
+
+//Coding Challenge 5
+class CheckBook { //changed from var myCheckBook
+  constructor(myName, bills, rates){
+    this.myName = myName,
+    this.bills = bills,
+    this.rates = rates,
+    this.tipDollars = [];
+    this.finalBills = [];
+  }
+  calcTips(){
+    var rates = this.rates;
+    var bills = this.bills;
+    var finalBills = this.finalBills;
+    var tipDollars = this.tipDollars;
+    for(i=0; i<bills.length; i++){
+      var bill = bills[i];
+      switch(true) {
+        case bill < rates.s.cutoff:
+          tipDollars.push(rates.s.percent*bill);
+          finalBills.push(bill + rates.s.percent*bill);
+          break;
+        case rates.s.cutoff <= bill && bill <= rates.m.cutoff:
+          tipDollars.push(rates.m.percent*bill);
+          finalBills.push(bill + rates.m.percent*bill);
+          break; //if you "return" in one of these cases, you can skip the break;
+        default:
+          tipDollars.push(rates.l.percent*bill);
+          finalBills.push(bill + rates.l.percent*bill);
+      }
+    }
+    return [tipDollars,finalBills];
+  }
+};
+function averageTipDollars(tipDollarsArr){
+  return tipDollarsArr.reduce((a,b) => a + b, 0) / tipDollarsArr.length
+};
+var rates_j = {
+  s:{cutoff:50,percent:.2},//s means "Small Bill"
+  m:{cutoff:200,percent:.15},//m means "medium bill"
+  l:{cutoff:10000000,percent:.1} //l means "large bill"
+};
+var bills_j = [124,48,268,180,42];
+const johnsCheckBook = new CheckBook("John", bills_j, rates_j);
+johnsCheckBook.calcTips();
+
+var rates_m = {
+  s:{cutoff:100,percent:.2},//s means "Small Bill"
+  m:{cutoff:300,percent:.1},//m means "medium bill"
+  l:{cutoff:10000000,percent:.25} //l means "large bill"
+};
+var bills_m = [77,375,110,45];
+const marksCheckBook = new CheckBook("Mark", bills_m, rates_m);
+marksCheckBook.calcTips();
+
+//Calculate the average tipDollars paid for each family, log to the console which family paid the highest tips on average
+var dollarsMark = averageTipDollars(marksCheckBook.tipDollars);
+var dollarsJohn = averageTipDollars(johnsCheckBook.tipDollars);
+console.log("Mark paid "+dollarsMark+" average for tips");
+console.log("John paid "+dollarsJohn+" average for tips");
