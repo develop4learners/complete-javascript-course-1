@@ -100,6 +100,7 @@ console.log(mark.name+'\'s BMI: '+mark.bmi)
 
 
 //Coding Challenge 5
+//Part 1
 class CheckBook { //changed from var myCheckBook
   constructor(myName, bills, rates){
     this.myName = myName,
@@ -132,9 +133,11 @@ class CheckBook { //changed from var myCheckBook
     return [tipDollars,finalBills];
   }
 };
+//Part 2
 function averageTipDollars(tipDollarsArr){
   return tipDollarsArr.reduce((a,b) => a + b, 0) / tipDollarsArr.length
 };
+//Testing
 var rates_j = {
   s:{cutoff:50,percent:.2},//s means "Small Bill"
   m:{cutoff:200,percent:.15},//m means "medium bill"
